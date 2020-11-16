@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <title></title>
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link rel="stylesheet" href="reveal.js/css/reveal.min.css"/>
+    <style type="text/css">code{white-space: pre;}</style>
+    <link rel="stylesheet" href="reveal.js/css/theme/simple.css" id="theme">
+  <link rel="stylesheet" media="print" href="reveal.js/css/print/pdf.css" />
+  <!--[if lt IE 9]>
+  <script src="reveal.js/lib/js/html5shiv.js"></script>
+  <![endif]-->
+    <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_SVG" type="text/javascript"></script>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+
+<section id="description-logics" class="slide level2">
+<h1>Description Logics</h1>
+<p><a href="http://engstrom.morot.org">Fredrik Engström</a></p>
+<p>Human Reasoning</p>
+<p>2013-11-08</p>
+</section>
+<section><section id="introduction" class="titleslide slide level1"><h1>Introduction</h1></section><section id="ontology" class="slide level2">
+<h1>Ontology</h1>
+<blockquote>
+<p>An ontology is a specification of a conceptualization. That is, an ontology is a description (like a formal specification of a program) of the concepts and relationships that can exist for an agent or a community of agents. [...] My colleagues and I have been designing ontologies for the purpose of enabling <strong>knowledge sharing and reuse</strong>. [Gruber, 1992]</p>
+</blockquote>
+<div class="fragment">
+<ul>
+<li>Individuals / Objects</li>
+<li>Classes / Sets / Concepts</li>
+<li>Relations</li>
+</ul>
+</div>
+<div class="fragment">
+<hr />
+
+<ul>
+<li>The semantic web, Web 3.0, RDF, OWL, OWL-DL, etc...</li>
+</ul>
+</div>
+</section><section id="snomed-ct" class="slide level2">
+<h1>SNOMED-CT</h1>
+<ul>
+<li>Systematized Nomenclature Of Medicine Clinical Terms</li>
+</ul>
+<div class="fragment">
+<blockquote>
+<p>Snomed CT är ett internationellt begreppssystem som syftar till att göra dokumentationen i vård och omsorg enhetlig, entydig och ändamålsenlig. [...] Målet är att Snomed CT ska användas inom vård och omsorg i hela landet. [Socialstyrelsen]</p>
+</blockquote>
+<ul>
+<li class="fragment">Concept1 - Relation - Concept2</li>
+<li class="fragment">Common Cold - causative agent - Virus</li>
+<li class="fragment"><span class="math">\(\mathtt{CommonCold}(x) \rightarrow \exists y (\mathtt{causativeAgent}(x,y) \land \mathtt{Virus}(y))\)</span></li>
+<li class="fragment"><span class="math">\(\mathtt{CommonCold} \sqsubseteq \exists \mathtt{causativeAgent}. \mathtt{Virus}\)</span></li>
+<li class="fragment">Based on a description logic.</li>
+<li class="fragment">Used in so called <em>Clinical decision support system</em> (CDSS).</li>
+</ul>
+</div>
+</section></section>
+<section><section id="formal-definitions" class="titleslide slide level1"><h1>Formal definitions</h1></section><section id="syntax" class="slide level2">
+<h1>Syntax</h1>
+<h4 id="alc---attributive-concept-language-with-complement">ALC - Attributive Concept Language with Complement</h4>
+<ul>
+<li class="fragment">The set of concepts is built up from atomic concepts <span class="math">\(A\)</span> and roles <span class="math">\(R\)</span>: <span class="math">\[C ::=A \mathbin\vert \top \mathbin\vert \bot \mathbin\vert \lnot C \mathbin\vert C \sqcup C \mathbin\vert C \sqcap C \mathbin\vert \exists R.C \mathbin\vert \forall R.C\]</span> where <span class="math">\(A\)</span> is an atomic concept and <span class="math">\(R\)</span> a role.</li>
+<li class="fragment">The set of formulas is defined by: <span class="math">\[
+\varphi ::= C \equiv C \mathbin\vert C \sqsubseteq C \mathbin\vert C 
+\]</span> where <span class="math">\(C\)</span> is a concept.</li>
+<li class="fragment">No individual variables!</li>
+<li class="fragment"><span class="math">\(\exists R. C\)</span> &quot;All things with an <span class="math">\(R\)</span>-successor in <span class="math">\(C\)</span>&quot;. &quot;R some C&quot;</li>
+<li class="fragment"><span class="math">\(\forall R. C\)</span> &quot;All things with all <span class="math">\(R\)</span>-successors in <span class="math">\(C\)</span>&quot;. &quot;R all C&quot;</li>
+</ul>
+</section><section id="examples" class="slide level2">
+<h1>Examples</h1>
+<ul>
+<li class="fragment"><span class="math">\(\mathtt{Male} \sqsubseteq \mathtt{Person}\)</span></li>
+<li class="fragment"><span class="math">\(\exists \mathtt{hasChild}.\mathtt{Male}\)</span></li>
+<li class="fragment"><span class="math">\(\forall \mathtt{hasChild}.\mathtt{Male}\)</span></li>
+<li class="fragment"><span class="math">\(\exists \mathtt{hasChild}.\mathtt{Male} \sqcap \forall \mathtt{hasChild}.\mathtt{Male}\)</span></li>
+</ul>
+</section><section id="semantics" class="slide level2">
+<h1>Semantics</h1>
+<ul>
+<li>A model <span class="math">\(M\)</span> gives an interpretation to each atomic concept and role.</li>
+<li>By a recursive definition each concept <span class="math">\(C\)</span> is given an interpretation <span class="math">\(C^M \subseteq M\)</span>.</li>
+<li><span class="math">\(\top^M = M\)</span> and <span class="math">\(\bot^M = \emptyset\)</span></li>
+<li><span class="math">\((C \sqcup D)^M = C^M \cup D^M\)</span>.</li>
+<li><span class="math">\((C \sqcap D)^M = C^M \cap D^M\)</span>.</li>
+<li><span class="math">\((\lnot C)^M = M \setminus C^M\)</span>.</li>
+<li><span class="math">\((\forall R.C)^M = \{a \in M | \forall x \in M (\langle a,x\rangle \in R^M \rightarrow x \in C^M) \}\)</span></li>
+<li><span class="math">\((\exists R.C)^M = \{a \in M | \exists x \in M (\langle a,x\rangle \in R^M \land x \in C^M) \}\)</span></li>
+</ul>
+</section><section id="semantics-continued" class="slide level2">
+<h1>Semantics continued</h1>
+<ul>
+<li><span class="math">\(M \models C \sqsubseteq D\)</span> iff <span class="math">\(C^M \subseteq D^M\)</span>.</li>
+<li><span class="math">\(M \models C \equiv D\)</span> iff <span class="math">\(C^M = D^M\)</span>.</li>
+</ul>
+<div class="fragment">
+<hr /> 
+
+<ul>
+<li><span class="math">\(O \models \varphi\)</span> if all models of <span class="math">\(O\)</span> are models of <span class="math">\(\varphi\)</span>.</li>
+<li><span class="math">\(\models \varphi\)</span> if all models are models of <span class="math">\(\varphi\)</span>.</li>
+</ul>
+</div>
+<div class="fragment">
+<hr />
+
+<blockquote>
+<p>A concept <span class="math">\(C\)</span> is <strong>satisfiable</strong> if there is a model <span class="math">\(M\)</span> such that <span class="math">\(C^M \neq \emptyset\)</span>.</p>
+</blockquote>
+<p><span class="math">\(C\)</span> is satisfiable iff <span class="math">\(\not\models C \sqsubseteq \bot\)</span>.</p>
+</div>
+</section><section id="examples-1" class="slide level2">
+<h1>Examples</h1>
+<ul>
+<li class="fragment"><span class="math">\(\mathtt{Person} \sqsubseteq \lnot\mathtt{Movie}\)</span></li>
+<li class="fragment"><span class="math">\(\mathtt{RRated} \sqsubseteq \mathtt{Movie}\)</span></li>
+<li class="fragment"><span class="math">\(\mathtt{RRated} \equiv \mathtt{Thriller} \sqcup (\forall \mathtt{hasViolenceLevel}.\mathtt{High})\)</span></li>
+<li class="fragment"><span class="math">\(\exists \mathtt{hasViolenceLevel}.\top \sqsubseteq \mathtt{Movie}\)</span></li>
+</ul>
+</section><section id="terminology-box" class="slide level2">
+<h1>Terminology Box</h1>
+<blockquote>
+<p>A <strong>TBox</strong> is a set <span class="math">\(O\)</span> of formulas of the form <span class="math">\(A \equiv D\)</span> or <span class="math">\(A \sqsubseteq D\)</span> where <span class="math">\(A\)</span> is an atomic concept and each atomic concept occurs at most once on the left hand side of a formula in <span class="math">\(O\)</span>.</p>
+</blockquote>
+<div class="fragment">
+<p>Sometimes we need the TBox to be <em>acyclic</em>:</p>
+<blockquote>
+<p>An atomic concept <span class="math">\(A\)</span> <strong>directly uses</strong> an atomic concept <span class="math">\(B\)</span> in <span class="math">\(O\)</span> if <span class="math">\(B\)</span> occurs in the right-hand side of any axiom with <span class="math">\(A\)</span> on the left-hand side. The relation <strong>uses</strong> is then the transitive closure of the directly uses relation. <span class="math">\(O\)</span> is <strong>acyclic</strong> if no atomic concept <span class="math">\(A\)</span> uses <span class="math">\(A\)</span>.</p>
+</blockquote>
+</div>
+</section><section id="assertion-box" class="slide level2">
+<h1>Assertion Box</h1>
+<blockquote>
+<p>An ABox consists of assertions of the form <span class="math">\(C(a)\)</span> and <span class="math">\(R(a,b)\)</span> where <span class="math">\(a\)</span> and <span class="math">\(b\)</span> are <strong>constants</strong>.</p>
+</blockquote>
+<ul>
+<li><p>Not included in our simplified system.</p></li>
+<li><p>An ABox is, in some sense, equivalent to a relational database where we only allow unary and binary relations.</p></li>
+</ul>
+<blockquote>
+<p><strong>Important</strong>: In the context of relational databases we have the <strong>closed world assumption</strong>. Not so in DL. DL is monotone.</p>
+</blockquote>
+<ul>
+<li>A pair of a TBox and an ABox is called a <em>Knowledge Base</em>.</li>
+</ul>
+</section></section>
+<section><section id="connections-with-other-formalisms" class="titleslide slide level1"><h1>Connections with other formalisms</h1></section><section id="first-order-logic" class="slide level2">
+<h1>First-order Logic</h1>
+<ul>
+<li>Clearly any concept can be rewritten as a formula with a free variable.</li>
+</ul>
+<p class="fragment roll-in">
+<span class="math">\(\forall R_1. (C \sqcap \exists R_2 .C)\)</span> is translated to <span class="math">\[\forall y (R_1(x,y) \rightarrow 
+(C(y) \land \exists z (R_2(y,z) \land C(z))))\]</span>
+</p>
+
+<ul>
+<li class="fragment">ALC translates in this way into a small fragment of FOL.</li>
+<li class="fragment">ALC can be translated into FO². (Sat is NEXPTIME)</li>
+<li class="fragment">ALC can be translated into GF.</li>
+</ul>
+</section><section id="modal-propositional-logic" class="slide level2">
+<h1>Modal propositional logic</h1>
+<div class="fragment">
+<p>ALC is multi modal logic K:</p>
+<ul>
+<li><span class="math">\(\forall R\)</span> translates to <span class="math">\(\Box_R\)</span></li>
+<li><span class="math">\(\exists R\)</span> translates to <span class="math">\(\Diamond_R\)</span></li>
+<li><span class="math">\(\sqcup\)</span> to <span class="math">\(\lor\)</span></li>
+<li><span class="math">\(\sqcap\)</span> to <span class="math">\(\land\)</span></li>
+<li><span class="math">\(\lnot\)</span> to <span class="math">\(\lnot\)</span></li>
+</ul>
+</div>
+</section><section id="complexity" class="slide level2">
+<h1>Complexity</h1>
+<p><a href="http://www.cs.man.ac.uk/~ezolin/dl/">Description Logic Complexity Navigator</a></p>
+</section></section>
+<section><section id="explanations" class="titleslide slide level1"><h1>Explanations</h1></section><section id="intro" class="slide level2">
+<h1>Intro</h1>
+<blockquote>
+<p>An engineer developing an ontology <span class="math">\(O\)</span> suddenly realizes that <span class="math">\(O \models \top \sqsubseteq \bot\)</span>. (debugging)</p>
+</blockquote>
+<div class="fragment">
+<blockquote>
+<p>A medical doctor gets a recommended treatment relying on a medical ontology, such as SNOMED-CT. (safety)</p>
+</blockquote>
+</div>
+<div class="fragment">
+<p>Actually, it follows from SNOMED-CT that <span class="math">\(\mathtt{AmpOfFinger} \sqsubseteq \mathtt{AmpOfHand}\)</span>.</p>
+</div>
+<div class="fragment">
+<blockquote>
+<p><strong>Why</strong> does an entailment <span class="math">\(O \models \varphi\)</span> hold?</p>
+</blockquote>
+</div>
+</section><section id="proofs" class="slide level2">
+<h1>Proofs</h1>
+<ul>
+<li>Several proof system for DL.</li>
+<li>Usually based on tableaux systems. (Not very surprising, remember ALC `is' multi modal K.)</li>
+<li>These systems are constructed to get fast automatic theorem provers (called <em>reasoners</em> in the DL-community).</li>
+<li>They are not well suited as explanations for humans.</li>
+</ul>
+</section><section id="justifications" class="slide level2">
+<h1>Justifications</h1>
+<blockquote>
+<p>A justification of <span class="math">\(\varphi\)</span> (wrt <span class="math">\(O\)</span>) is a <em>minimal</em> subset <span class="math">\(I \subseteq O\)</span> such that <span class="math">\(I \models \varphi\)</span>.</p>
+</blockquote>
+<div class="fragment">
+<h4 id="example">Example:</h4>
+<blockquote>
+<ul>
+<li><span class="math">\(\mathtt{RRated} \sqsubseteq \mathtt{Thriller}\)</span></li>
+<li><span class="math">\(\mathtt{Thriller} \sqsubseteq \mathtt{Movie}\)</span>
+</blockquote>
+is a justification for <span class="math">\(\mathtt{RRated} \sqsubseteq \mathtt{Movie}\)</span>.</li>
+</ul>
+</div>
+</section><section id="section" class="slide level2">
+<h1></h1>
+<figure>
+<img src="protege.gif" />
+</figure>
+</section><section id="section-1" class="slide level2">
+<h1></h1>
+<blockquote>
+<ul>
+<li><span class="math">\(\mathtt{Person} \sqsubseteq \lnot\mathtt{Movie}\)</span></li>
+<li><span class="math">\(\mathtt{RRated} \sqsubseteq \mathtt{Movie}\)</span></li>
+<li><span class="math">\(\mathtt{RRated} \equiv \mathtt{Thriller} \sqcup (\forall \mathtt{hasViolenceLevel}.\mathtt{High})\)</span></li>
+<li><span class="math">\(\exists  \mathtt{hasViolenceLevel}.\top \sqsubseteq \mathtt{Movie}\)</span>
+</blockquote>
+</li>
+</ul>
+<div class="fragment">
+<p>is a justification for <span class="math">\(\mathtt{Person} \sqsubseteq \bot\)</span>.</p>
+</div>
+</section><section id="lemmatized-justifications" class="slide level2">
+<h1>Lemmatized justifications</h1>
+<p>[Horridge, Parsia, Sattler]</p>
+<figure>
+<img src="justification.png" />
+</figure>
+<div class="fragment">
+<p>The definition rests on a notion of complexity measure.</p>
+</div>
+</section><section id="complexity-measure" class="slide level2">
+<h1>Complexity measure</h1>
+<ul>
+<li>What is the <em>complexity</em> of an entailment <span class="math">\(I \models \varphi\)</span>?</li>
+<li>We want to model <em>cognitive</em> complexity.</li>
+<li>The naïve approach of Horridge et al:</li>
+</ul>
+<blockquote>
+<p>The complexity of an entailment <span class="math">\(I \models \varphi\)</span> is the sum of a number of complexity scores.</p>
+</blockquote>
+<p>The complexity scores are syntactic and semantic scores such as:</p>
+<ul>
+<li>100 times the number of axiom types in <span class="math">\(I,\varphi\)</span>.</li>
+<li>10 times the number of constructors in <span class="math">\(I,\varphi\)</span>.</li>
+</ul>
+</section><section id="a-better-way" class="slide level2">
+<h1>A better way</h1>
+<ul>
+<li>Use a natural proof system somehow based on a cognitive model.</li>
+<li>Define the complexity of an entailment as the length of the shortest proof.</li>
+<li>The proof system should be:
+<ul><li>
+Linear
+</li>  
+<li>
+Local
+</li> 
+<li>
+Deep
+</li></ul>
+</li>
+</ul>
+</section><section id="a-natural-proof-system" class="slide level2">
+<h1>A natural proof system</h1>
+<ul>
+<li>Rules, for example: <img src="sub.png" /></li>
+<li>Axioms, such as: <span class="math">\(C \sqcup \lnot C \sqsubseteq \top\)</span></li>
+<li>Cognitive Restrictions that correspond to bounded working memory.</li>
+</ul>
+</section><section id="an-example-proof" class="slide level2">
+<h1>An example proof</h1>
+<figure>
+<img src="em1.proof.png" />
+</figure>
+</section><section id="results" class="slide level2">
+<h1>Results</h1>
+<ul>
+<li>A procedure for finding the shortest proof was implemented in Haskell by Abdul Rahim Nizamani.</li>
+<li>A small experiment was reported on in the Horridge et al paper. 14 participants.</li>
+</ul>
+<hr />
+
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Justification</th>
+<th style="text-align: center;">Success rate</th>
+<th style="text-align: center;">Model complexity</th>
+<th style="text-align: center;">Proof length</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">57%</td>
+<td style="text-align: center;">654</td>
+<td style="text-align: center;">11</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">57%</td>
+<td style="text-align: center;">703</td>
+<td style="text-align: center;">14</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">3</td>
+<td style="text-align: center;">29%</td>
+<td style="text-align: center;">675</td>
+<td style="text-align: center;">18</td>
+</tr>
+</tbody>
+</table>
+</section><section id="but-hey" class="slide level2">
+<h1>But hey!</h1>
+<div class="fragment">
+<p>Why can't we extract explanations <em>directly from the proofs</em>?</p>
+</div>
+</section></section>
+<section><section id="thank-you" class="titleslide slide level1"><h1>Thank you</h1></section><section id="section-2" class="slide level2">
+<h1></h1>
+<p>These slides were made using:</p>
+<ul>
+<li><a href="http://lab.hakim.se/reveal-js/">reveal.js</a></li>
+<li><a href="http://johnmacfarlane.net/pandoc/">pandoc</a></li>
+<li><a href="http://www.mathjax.org/">mathjax</a></li>
+</ul>
+</section></section>
+    </div>
+  </div>
+
+  <script src="reveal.js/lib/js/head.min.js"></script>
+  <script src="reveal.js/js/reveal.min.js"></script>
+
+  <script>
+
+      // Full list of configuration options available here:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+        theme: 'sky', // available themes are in /css/theme
+        transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+        // Optional libraries used to extend on reveal.js
+        dependencies: [
+          { src: 'reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'reveal.js/plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+          { src: 'reveal.js/plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } },
+//          { src: 'reveal.js/plugin/search/search.js', async: true, condition: function() { return !!document.body.classList; }, }
+//          { src: 'reveal.js/plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+]});
+    </script>
+  </body>
+</html>
